@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>Learn tmux in your browser - TmuxQuest</title>
+    <meta name="description" content="Learn tmux by playing - a free browser game that teaches real tmux: panes, windows, sessions and copy-mode, through a level-based campaign." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://tmuxquest.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="TmuxQuest" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://tmuxquest.com/" />
+    <meta property="og:title" content="Learn tmux in your browser - TmuxQuest" />
+    <meta property="og:description" content="A free browser game that teaches real tmux - panes, windows, sessions, copy-mode and the command prompt - through a level-based campaign on a faithful fake-tmux engine." />
+    <meta property="og:image" content="https://tmuxquest.com/brand/social.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TMUX QUEST - learn tmux by playing" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Learn tmux in your browser - TmuxQuest" />
+    <meta name="twitter:description" content="A free browser game that teaches real tmux - panes, windows, sessions, copy-mode and the command prompt - through a level-based campaign on a faithful fake-tmux engine." />
+    <meta name="twitter:image" content="https://tmuxquest.com/brand/social.png" />
+    <meta name="twitter:image:alt" content="TMUX QUEST - learn tmux by playing" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://tmuxquest.com/#website",
+          "url": "https://tmuxquest.com/",
+          "name": "TmuxQuest",
+          "description": "Learn tmux by playing - a browser game with a faithful fake-tmux engine and level-based play.",
+          "inLanguage": "en"
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://tmuxquest.com/#app",
+          "url": "https://tmuxquest.com/",
+          "name": "TmuxQuest",
+          "description": "Learn tmux by playing - a browser game that teaches real tmux through mission-based play on a faithful fake-tmux engine.",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web browser",
+          "browserRequirements": "Requires JavaScript. Desktop browser.",
+          "inLanguage": "en",
+          "isAccessibleForFree": true,
+          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+          "image": "https://tmuxquest.com/brand/social.png",
+          "screenshot": "https://tmuxquest.com/brand/social.png",
+          "sameAs": [ "https://github.com/tmuxquest/tmuxquest" ]
+        }
+      ]
+    }
+    </script>
+    <script>
+      // Apply persisted skin before first paint (eliminates FOUC).
+      try {
+        var raw = localStorage.getItem('tmuxquest:settings');
+        if (raw) {
+          var t = JSON.parse(raw).theme;
+          if (t === 'default' || t === 'phosphor' || t === 'amber' || t === 'paper') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        }
+      } catch (e) { /* ignore */ }
+    </script>
+    <style>
+      /* Critical inline CSS - paints the right background before theme.css loads. */
+      html, body, #app { height: 100%; margin: 0; }
+      html { overflow: hidden; background: #1e1e1e; color: #d4d4d4;
+             font-family: "JetBrains Mono", "Menlo", ui-monospace, monospace; }
+      html[data-theme="phosphor"] { background: #050806; color: #c9f9d0; }
+      html[data-theme="amber"]    { background: #0e0905; color: #fac678; }
+      html[data-theme="paper"]    { background: #efece2; color: #14120e; }
+      body { background: inherit; color: inherit; overflow: hidden; }
+      .mobile-note { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-note" role="alertdialog" aria-labelledby="mn-title" aria-describedby="mn-note">
+      <div class="mn-poster">
+        <div class="mn-banner-wrap" id="mn-title" aria-label="tmux quest">
+<pre class="mn-banner" aria-hidden="true">████████╗███╗   ███╗██╗   ██╗██╗  ██╗
+╚══██╔══╝████╗ ████║██║   ██║╚██╗██╔╝
+   ██║   ██╔████╔██║██║   ██║ ╚███╔╝
+   ██║   ██║╚██╔╝██║██║   ██║ ██╔██╗
+   ██║   ██║ ╚═╝ ██║╚██████╔╝██╔╝ ██╗
+   ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝</pre>
+<pre class="mn-banner" aria-hidden="true"> ██████╗ ██╗   ██╗███████╗███████╗████████╗
+██╔═══██╗██║   ██║██╔════╝██╔════╝╚══██╔══╝
+██║   ██║██║   ██║█████╗  ███████╗   ██║
+██║   ██║██║   ██║██╔══╝  ╚════██║   ██║
+╚██████╔╝╚██████╔╝███████╗███████║   ██║
+ ╚══▀▀═╝  ╚═════╝ ╚══════╝╚══════╝   ╚═╝</pre>
+          </div>
+        <div class="mn-tagline">learn tmux by playing</div>
+
+        <div class="mn-note" id="mn-note">
+          <div class="mn-note-head">mobile is not supported</div>
+          <div class="mn-note-sub">open on a computer.</div>
+        </div>
+
+        <div class="mn-links">
+          <a class="mn-link" href="https://github.com/tmuxquest/tmuxquest" target="_blank" rel="noopener noreferrer" aria-label="source on GitHub">
+            <svg class="mn-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+              <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+            </svg>
+            github
+          </a>
+          <a class="mn-link" href="https://buymeacoffee.com/tmuxquest" target="_blank" rel="noopener noreferrer" aria-label="support">
+            <svg class="mn-ico" viewBox="-2 -2 20 20" width="14" height="14" aria-hidden="true">
+              <path fill="currentColor" d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.17a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+            </svg>
+            support
+          </a>
+        </div>
+      </div>
+    </div>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

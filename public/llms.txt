@@ -1,0 +1,10 @@
+# TmuxQuest
+
+> Learn tmux by playing - a free, desktop browser game that teaches real tmux through mission-based play on a faithful fake-tmux engine.
+
+TmuxQuest teaches the actual tmux key bindings and workflows - panes, windows, sessions, copy-mode and the command prompt - through a short, chapter-based campaign of focused missions. It runs entirely client-side, needs no account or install, and is free. Desktop only (no mobile support).
+
+## Links
+
+- [Play TmuxQuest](https://tmuxquest.com/): the game itself
+- [Source on GitHub](https://github.com/tmuxquest/tmuxquest): public source repository
