@@ -4,7 +4,7 @@
   import { spineClearedCount, campaignComplete } from '../store/gameStore.svelte';
   import { focusReturn } from './focusReturn';
   import { fitWidth } from './fitWidth';
-  import { GITHUB_URL, SUPPORT_URL, openLink } from './links';
+  import { GITHUB_URL, SUPPORT_URL, CONTACT_EMAIL, openLink } from './links';
   import MissionBrowser from './MissionBrowser.svelte';
 
   type SettingsLike = { theme: 'auto' | 'dark' | 'light' };
@@ -13,6 +13,8 @@
     engineAlive,
     onPlay,
     onLaunchMission,
+    onSkip,
+    skipTitle,
     onToggleTheme,
     settings,
     onClose,
@@ -22,6 +24,8 @@
     engineAlive: boolean;
     onPlay: () => void;
     onLaunchMission: (i: number) => void;
+    onSkip: () => void;
+    skipTitle: string | null;
     onToggleTheme: () => void;
     settings: SettingsLike;
     onClose: () => void;
@@ -168,12 +172,30 @@
       {#if engineAlive}
         <div class="menu-hint dim">esc · back to level · still running</div>
       {/if}
+
+      <div class="menu-contact">
+        <a class="menu-contact-link" href="mailto:{CONTACT_EMAIL}" aria-label="email {CONTACT_EMAIL}">
+          <svg class="menu-contact-ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"
+               fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1.75" y="3.5" width="12.5" height="9" rx="1.5"/>
+            <path d="M2.25 4.5 8 8.75 13.75 4.5"/>
+          </svg>
+          <span class="menu-contact-addr">{CONTACT_EMAIL}</span>
+        </a>
+      </div>
     </div>
   {:else}
     <div class="menu-view-browse">
       <div class="browse-head">
         <span class="browse-head-label">choose level</span>
         <span class="browse-head-count">{spineCleared}/{SPINE_COUNT} cleared</span>
+        {#if skipTitle}
+          <button
+            class="browse-skip"
+            onclick={onSkip}
+            title="mark “{skipTitle}” cleared and unlock the next level - for when a level blocks you"
+          >skip level</button>
+        {/if}
         <span class="browse-head-hint">
           <span class="kbd-chip">esc</span> back
         </span>
@@ -335,6 +357,44 @@
 
   .menu-hint { font-size: 11px; margin-top: 12px; }
 
+  .menu-contact {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+  }
+  .menu-contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 6px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color 120ms ease, transform 120ms ease;
+  }
+  .menu-contact-ico {
+    display: block;
+    color: var(--ink-faint);
+    transition: color 120ms ease;
+  }
+  .menu-contact-addr {
+    border-bottom: 1px solid transparent;
+    transition: border-color 120ms ease;
+  }
+  .menu-contact-link:hover, .menu-contact-link:focus-visible {
+    color: var(--ink-bright);
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .menu-contact-link:hover .menu-contact-ico,
+  .menu-contact-link:focus-visible .menu-contact-ico { color: var(--accent); }
+  .menu-contact-link:hover .menu-contact-addr,
+  .menu-contact-link:focus-visible .menu-contact-addr {
+    border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
   .browse-head {
     width: 100%;
     display: flex;
@@ -354,6 +414,23 @@
     font-size: 12px;
   }
   .browse-head-hint { font-size: 11px; }
+  .browse-skip {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    padding: 2px 9px;
+    cursor: pointer;
+    align-self: center;
+    transition: background 80ms linear, border-color 80ms linear, color 80ms linear;
+  }
+  .browse-skip:hover, .browse-skip:focus-visible {
+    color: var(--ink-bright);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+  }
   .kbd-chip {
     display: inline-block;
     color: var(--ink-dim);

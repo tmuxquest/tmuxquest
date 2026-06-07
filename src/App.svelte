@@ -2,7 +2,7 @@
   import { createGame, firstUnclearedIndex, nextInTrackIndex, shouldOfferFinale, spineGoldGap } from './store/gameStore.svelte';
   import { createSettings } from './store/settings.svelte';
   import { MISSIONS, SPINE_COUNT, ANNEX_COUNT } from './missions/missions';
-  import { loadProgress } from './store/progress';
+  import { loadProgress, recordResult } from './store/progress';
   import { storageAvailable } from './store/storageHealth';
   import { tokenize } from './engine/keyInput';
   import type { Session } from './engine/types';
@@ -60,6 +60,15 @@
 
   const nextIdx = $derived(nextInTrackIndex(g.index));
   const nextMission = $derived(nextIdx >= 0 ? MISSIONS[nextIdx]! : null);
+
+  const skipIndex = $derived(MISSIONS.findIndex((m) => !progress.results[m.id]));
+  const skipMission = $derived(skipIndex >= 0 ? MISSIONS[skipIndex]! : null);
+
+  function handleSkip() {
+    if (skipIndex < 0) return;
+    recordResult(MISSIONS[skipIndex]!.id);
+    progress = loadProgress();
+  }
 
   const briefToggleBlocked = $derived(g.menuOpen || confirmExitOpen || successOpen);
 
@@ -241,6 +250,8 @@
       handleLaunchMission(i);
     }}
     onLaunchMission={handleLaunchMission}
+    onSkip={handleSkip}
+    skipTitle={skipMission?.title ?? null}
     onToggleTheme={() => settings.cycleTheme()}
     {settings}
     onClose={() => g.closeMenu()}
