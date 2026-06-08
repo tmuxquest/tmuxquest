@@ -10,6 +10,7 @@
     SHELL_HOME, buildShellFS, getCompletions, commonPrefix,
     type CmdResult, type Line,
   } from './shellFs';
+  import { eventMatchesPrefix } from '../store/prefixSpec';
 
   const BUILTINS = [
     'cat', 'cd', 'clear', 'echo', 'exit', 'help', 'ls',
@@ -290,11 +291,10 @@
     const value = inp.value;
 
     if (dispatchTmuxKey && tmuxState) {
-      const pk = tmuxState.prefixKey ?? 'C-b';
-      const pkLetter = /^C-([a-z])$/.exec(pk)?.[1] ?? 'b';
-      if (e.ctrlKey && e.key.toLowerCase() === pkLetter) {
+      const prefixTok = eventMatchesPrefix(e, tmuxState.prefixKey ?? 'C-b');
+      if (prefixTok) {
         e.preventDefault(); e.stopPropagation();
-        dispatchTmuxKey(pk);
+        dispatchTmuxKey(prefixTok);
         return;
       }
       const mode = tmuxState.mode || 'normal';

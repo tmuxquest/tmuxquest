@@ -871,10 +871,6 @@ function handleMenu(s: TmuxState, key: KeyToken, events: GameEvent[], opts?: App
 function handlePrefix(s: TmuxState, key: KeyToken, events: GameEvent[], opts?: ApplyOpts): DispatchResult {
   s.mode = 'normal';
   const se = attached(s)!;
-  if (key === s.prefixKey) {
-    s.statusMessage = `literal ${s.prefixKey} sent`;
-    return { state: s, events };
-  }
   switch (key) {
     case 'd':
       s.attachedSessionId = null;
@@ -1052,6 +1048,8 @@ function handlePrefix(s: TmuxState, key: KeyToken, events: GameEvent[], opts?: A
           events.push({ type: 'window-switched', windowId: se.activeWindowId });
         }
       } else if (paneCommand(s, se, key, events, opts)) {
+      } else if (key === s.prefixKey) {
+        s.statusMessage = `literal ${s.prefixKey} sent`;
       } else {
         s.statusMessage = `no binding: ${s.prefixKey} ${key}`;
       }

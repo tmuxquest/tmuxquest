@@ -6,6 +6,7 @@ import type { Mission } from '../missions/schema';
 
 export interface MissionEngineOpts {
   promptLineFor?: (paneId: string) => string | undefined;
+  prefix?: string;
 }
 
 export class MissionEngine {
@@ -14,9 +15,12 @@ export class MissionEngine {
   keystrokes = 0;
   complete = false;
   promptLineFor?: (paneId: string) => string | undefined;
+  private readonly injectedPrefix?: string;
 
   constructor(public mission: Mission, opts?: MissionEngineOpts) {
     this.state = mission.initialState();
+    this.injectedPrefix = opts?.prefix;
+    if (opts?.prefix) this.state.prefixKey = opts.prefix;
     this.promptLineFor = opts?.promptLineFor;
   }
 
@@ -37,6 +41,7 @@ export class MissionEngine {
 
   reset(): void {
     this.state = this.mission.initialState();
+    if (this.injectedPrefix) this.state.prefixKey = this.injectedPrefix;
     this.events = []; this.keystrokes = 0; this.complete = false;
   }
 

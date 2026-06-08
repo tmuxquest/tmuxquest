@@ -1,3 +1,5 @@
+import { DEFAULT_PREFIX, isValidPrefixToken } from './prefixSpec';
+
 export type ThemePref = 'auto' | 'dark' | 'light';
 export type ThemeName = 'dark' | 'light';
 
@@ -5,8 +7,8 @@ export const THEME_PREFS: ThemePref[] = ['auto', 'dark', 'light'];
 
 const KEY = 'tmuxquest:settings';
 
-interface Persisted { theme: ThemePref; }
-const DEFAULTS: Persisted = { theme: 'auto' };
+interface Persisted { theme: ThemePref; prefix: string; }
+const DEFAULTS: Persisted = { theme: 'auto', prefix: DEFAULT_PREFIX };
 
 function isPref(v: unknown): v is ThemePref {
   return typeof v === 'string' && (THEME_PREFS as string[]).includes(v);
@@ -25,7 +27,10 @@ function load(): Persisted {
   if (!raw) return { ...DEFAULTS };
   try {
     const p = JSON.parse(raw) as Partial<Persisted>;
-    return { theme: migrateTheme(p?.theme) };
+    return {
+      theme: migrateTheme(p?.theme),
+      prefix: isValidPrefixToken(p?.prefix) ? p.prefix : DEFAULT_PREFIX,
+    };
   } catch {
     return { ...DEFAULTS };
   }
@@ -49,10 +54,15 @@ export function readResolvedTheme(): ThemeName {
   return resolveTheme(load().theme);
 }
 
+export function readPersistedPrefix(): string {
+  return load().prefix;
+}
+
 export function createSettings() {
   const init = load();
   let pref = $state<ThemePref>(init.theme);
   let systemLight = $state(systemPrefersLight());
+  let pfx = $state<string>(init.prefix);
 
   try {
     const mq = window.matchMedia('(prefers-color-scheme: light)');
@@ -60,7 +70,7 @@ export function createSettings() {
   } catch { }
 
   function persist() {
-    try { localStorage.setItem(KEY, JSON.stringify({ theme: pref })); }
+    try { localStorage.setItem(KEY, JSON.stringify({ theme: pref, prefix: pfx })); }
     catch { }
   }
 
@@ -75,5 +85,7 @@ export function createSettings() {
       pref = THEME_PREFS[(i + 1) % THEME_PREFS.length]!;
       persist();
     },
+    get prefix() { return pfx; },
+    setPrefix(token: string) { if (!isValidPrefixToken(token)) return; pfx = token; persist(); },
   };
 }
