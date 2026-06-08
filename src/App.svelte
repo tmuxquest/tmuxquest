@@ -255,6 +255,7 @@
     onToggleTheme={() => settings.cycleTheme()}
     {settings}
     onClose={() => g.closeMenu()}
+    onSetPrefix={(t) => settings.setPrefix(t)}
   />
 
   {#if confirmExitOpen}
