@@ -2,12 +2,18 @@ export const DEFAULT_PREFIX = 'C-b';
 
 export const RESERVED_CTRL = new Set(['w', 't', 'n', 'q', 'r', 'l']);
 
+const PUNCT_BY_CODE: Record<string, string> = {
+  Minus: '-', Equal: '=', BracketLeft: '[', BracketRight: ']', Backslash: '\\',
+  Semicolon: ';', Quote: "'", Comma: ',', Period: '.', Slash: '/', Backquote: '`',
+};
+const ALT_PUNCT = new Set(Object.values(PUNCT_BY_CODE));
+
 function altBaseFromCode(code: string): string | null {
   const letter = /^Key([A-Z])$/.exec(code);
   if (letter) return letter[1]!.toLowerCase();
   const digit = /^Digit([0-9])$/.exec(code);
   if (digit) return digit[1]!;
-  return null;
+  return PUNCT_BY_CODE[code] ?? null;
 }
 
 function tokenForEvent(e: KeyboardEvent): string | null {
@@ -41,7 +47,7 @@ export function eventMatchesPrefix(e: KeyboardEvent, prefixKey: string): string 
 
 export function describeChord(e: KeyboardEvent): string {
   const tok = tokenForEvent(e);
-  if (tok !== null) return formatPrefixLong(tok);
+  if (tok !== null) return formatPrefix(tok);
   const mods: string[] = [];
   if (e.ctrlKey) mods.push('Ctrl');
   if (e.altKey) mods.push('Alt');
@@ -54,15 +60,6 @@ export function describeChord(e: KeyboardEvent): string {
 
 export function formatPrefix(token: string): string {
   if (token === 'C- ') return 'C-Space';
-  if (token.startsWith('C-')) return '^' + token.slice(2).toUpperCase();
-  if (token.startsWith('M-')) return 'M-' + token.slice(2).toUpperCase();
-  return token;
-}
-
-export function formatPrefixLong(token: string): string {
-  if (token === 'C- ') return 'Ctrl + Space';
-  if (token.startsWith('C-')) return 'Ctrl + ' + token.slice(2).toUpperCase();
-  if (token.startsWith('M-')) return 'Alt + ' + token.slice(2).toUpperCase();
   return token;
 }
 
@@ -72,6 +69,8 @@ export function isValidPrefixToken(t: unknown): t is string {
   if (m) return !RESERVED_CTRL.has(m[1]!);
   if (t === 'C- ') return true;
   if (/^M-[a-z0-9]$/.test(t)) return true;
+  const mp = /^M-(.)$/.exec(t);
+  if (mp && ALT_PUNCT.has(mp[1]!)) return true;
   if (t.length === 1) return true;
   return false;
 }

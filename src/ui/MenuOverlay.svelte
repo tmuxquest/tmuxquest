@@ -4,7 +4,7 @@
   import { spineClearedCount, campaignComplete } from '../store/gameStore.svelte';
   import { focusReturn } from './focusReturn';
   import { fitWidth } from './fitWidth';
-  import { GITHUB_URL, SUPPORT_URL, CONTACT_EMAIL, openLink } from './links';
+  import { GITHUB_URL, SUPPORT_URL, X_URL, CONTACT_EMAIL, openLink } from './links';
   import MissionBrowser from './MissionBrowser.svelte';
   import PrefixCaptureOverlay from './PrefixCaptureOverlay.svelte';
   import { formatPrefix } from '../store/prefixSpec';
@@ -154,19 +154,7 @@
           <span class="menu-btn-label">browse levels</span>
         </button>
       </div>
-      <div class="menu-secondary">
-        <button class="menu-link" onclick={() => openLink(GITHUB_URL)}>
-          <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-            <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
-          </svg>
-          github
-        </button>
-        <button class="menu-link" onclick={() => openLink(SUPPORT_URL)}>
-          <svg class="menu-ico" viewBox="-2 -2 20 20" width="14" height="14" aria-hidden="true">
-            <path fill="currentColor" d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.17a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
-          </svg>
-          support
-        </button>
+      <div class="menu-secondary menu-settings">
         <span class="menu-prefix">
           <button
             class="menu-link menu-prefix-btn"
@@ -177,8 +165,10 @@
           >
             <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"
                  fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="1.5" y="4" width="13" height="8" rx="1.5"/>
-              <path d="M4 6.5h.01M6.5 6.5h.01M9 6.5h.01M11.5 6.5h.01M4.5 9.5h6"/>
+              <g transform="translate(8 8) scale(1.12) translate(-8 -8)">
+                <rect x="1.5" y="4" width="13" height="8" rx="1.5"/>
+                <path d="M4 6.5h.01M6.5 6.5h.01M9 6.5h.01M11.5 6.5h.01M4.5 9.5h6"/>
+              </g>
             </svg>
             prefix {formatPrefix(settings.prefix)}
           </button>
@@ -186,13 +176,13 @@
         <button class="menu-link" onclick={onToggleTheme} aria-label="cycle theme">
           {#if settings.theme === 'auto'}
             <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="8" cy="8" r="5.5"/>
-              <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor" stroke="none"/>
+              <circle cx="8" cy="8" r="7.35"/>
+              <path d="M8 0.65a7.35 7.35 0 0 1 0 14.7z" fill="currentColor" stroke="none"/>
             </svg>
             auto
           {:else if settings.theme === 'dark'}
             <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5Z"/>
+              <path d="M14.5 10A7.2 7.2 0 0 1 5.9 1.4a7.2 7.2 0 1 0 8.6 8.6Z"/>
             </svg>
             dark
           {:else}
@@ -205,20 +195,39 @@
         </button>
       </div>
 
+      <div class="menu-secondary menu-social">
+        <button class="menu-link" onclick={() => openLink(GITHUB_URL)} aria-label="github">
+          <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <g transform="translate(8 8) scale(0.93) translate(-8 -8)">
+              <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+            </g>
+          </svg>
+        </button>
+        <button class="menu-link" onclick={() => openLink(X_URL)} aria-label="x / twitter">
+          <svg class="menu-ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+            <path fill="currentColor" d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+          </svg>
+        </button>
+        <a class="menu-link menu-contact-link" href="mailto:{CONTACT_EMAIL}" aria-label="email {CONTACT_EMAIL}">
+          <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"
+               fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="0.7" y="2.3" width="14.6" height="11.4" rx="2"/>
+            <path d="M1.3 3.2 8 8.6 14.7 3.2"/>
+          </svg>
+        </a>
+        <button class="menu-link" onclick={() => openLink(SUPPORT_URL)}>
+          <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <g transform="translate(8 8) scale(0.93) translate(-8 -8)">
+              <path fill="currentColor" d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.17a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+            </g>
+          </svg>
+          support
+        </button>
+      </div>
+
       {#if engineAlive}
         <div class="menu-hint dim">esc · back to level · still running</div>
       {/if}
-
-      <div class="menu-contact">
-        <a class="menu-contact-link" href="mailto:{CONTACT_EMAIL}" aria-label="email {CONTACT_EMAIL}">
-          <svg class="menu-contact-ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"
-               fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="1.75" y="3.5" width="12.5" height="9" rx="1.5"/>
-            <path d="M2.25 4.5 8 8.75 13.75 4.5"/>
-          </svg>
-          <span class="menu-contact-addr">{CONTACT_EMAIL}</span>
-        </a>
-      </div>
     </div>
   {:else}
     <div class="menu-view-browse">
@@ -315,12 +324,14 @@
   .menu-tagline {
     color: var(--ink);
     font-size: 13px;
-    margin-top: 4px;
+    margin-top: 9px;
     text-align: center;
   }
 
-  .menu-primary { display: flex; flex-direction: column; gap: 10px; align-items: center; margin-top: 28px; }
-  .menu-secondary { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; justify-content: center; align-items: baseline; }
+  .menu-primary { display: flex; flex-direction: column; gap: 10px; align-items: center; margin-top: 14px; }
+  .menu-secondary { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: center; }
+  .menu-settings { margin-top: 14px; }
+  .menu-social { margin-top: 16px; }
   .menu-link {
     display: inline-flex;
     align-items: center;
@@ -335,6 +346,7 @@
     transition: color 80ms linear;
   }
   .menu-link:hover, .menu-link:focus-visible { color: var(--ink-bright); }
+  .menu-contact-link { text-decoration: none; }
   .menu-ico { display: block; }
   .menu-prefix { display: inline-flex; align-items: baseline; gap: 4px; }
   .menu-prefix-btn { white-space: nowrap; }
@@ -402,44 +414,6 @@
   }
 
   .menu-hint { font-size: 11px; margin-top: 12px; }
-
-  .menu-contact {
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-  }
-  .menu-contact-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 3px 6px;
-    font-family: var(--font-body);
-    font-size: 12px;
-    letter-spacing: 0.01em;
-    color: var(--ink-faint);
-    text-decoration: none;
-    transition: color 120ms ease, transform 120ms ease;
-  }
-  .menu-contact-ico {
-    display: block;
-    color: var(--ink-faint);
-    transition: color 120ms ease;
-  }
-  .menu-contact-addr {
-    border-bottom: 1px solid transparent;
-    transition: border-color 120ms ease;
-  }
-  .menu-contact-link:hover, .menu-contact-link:focus-visible {
-    color: var(--ink-bright);
-    transform: translateY(-1px);
-    outline: none;
-  }
-  .menu-contact-link:hover .menu-contact-ico,
-  .menu-contact-link:focus-visible .menu-contact-ico { color: var(--accent); }
-  .menu-contact-link:hover .menu-contact-addr,
-  .menu-contact-link:focus-visible .menu-contact-addr {
-    border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  }
 
   .browse-head {
     width: 100%;

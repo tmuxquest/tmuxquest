@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import { focusReturn } from './focusReturn';
-  import { prefixFromEvent, describeChord, formatPrefixLong, DEFAULT_PREFIX } from '../store/prefixSpec';
+  import { prefixFromEvent, describeChord, formatPrefix, DEFAULT_PREFIX } from '../store/prefixSpec';
 
   let { current, onSet, onCancel }: {
     current: string;
@@ -60,7 +60,7 @@
     </div>
     <div class="help-pane-body prefix-capture-body">
       <div class="pc-stage" data-testid="prefix-capture-live" aria-live="polite">
-        <span class="pc-keys">{live || formatPrefixLong(candidate)}</span>
+        <span class="pc-keys">{live || formatPrefix(candidate)}</span>
       </div>
       {#if rejectMsg}
         <div class="pc-reject" data-testid="prefix-capture-reject">{rejectMsg}</div>
