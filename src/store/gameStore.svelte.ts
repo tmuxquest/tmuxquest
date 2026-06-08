@@ -6,6 +6,7 @@ import { recordResult, loadProgress, type Progress } from './progress';
 import { Stopwatch, shouldPause } from './stopwatch';
 import { thresholdsFor, starsFor, type Stars } from './stars';
 import { loadSession, saveSession, clearSession } from './session';
+import { readPersistedPrefix } from './settings.svelte';
 import { paneShellState } from './paneShellState.svelte';
 import { paneOrder } from '../engine/layout';
 import type { TmuxState, GameEvent } from '../engine/types';
@@ -14,6 +15,7 @@ import { buildPromptLine } from '../ui/promptLine';
 
 function makeEngineOpts(): import('../engine/missionEngine').MissionEngineOpts {
   return {
+    prefix: readPersistedPrefix(),
     promptLineFor: (paneId) => {
       const st = paneShellState.get(paneId, SHELL_HOME);
       return buildPromptLine(st.cwd, st.input);
