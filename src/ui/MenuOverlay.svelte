@@ -6,8 +6,10 @@
   import { fitWidth } from './fitWidth';
   import { GITHUB_URL, SUPPORT_URL, CONTACT_EMAIL, openLink } from './links';
   import MissionBrowser from './MissionBrowser.svelte';
+  import PrefixCaptureOverlay from './PrefixCaptureOverlay.svelte';
+  import { formatPrefix } from '../store/prefixSpec';
 
-  type SettingsLike = { theme: 'auto' | 'dark' | 'light' };
+  type SettingsLike = { theme: 'auto' | 'dark' | 'light'; prefix: string };
   let {
     progress,
     engineAlive,
@@ -19,6 +21,7 @@
     settings,
     onClose,
     visible,
+    onSetPrefix,
   }: {
     progress: Progress;
     engineAlive: boolean;
@@ -30,6 +33,7 @@
     settings: SettingsLike;
     onClose: () => void;
     visible: boolean;
+    onSetPrefix: (token: string) => void;
   } = $props();
 
   const spineCleared = $derived(spineClearedCount(progress));
@@ -40,6 +44,19 @@
   let view = $state<'welcome' | 'browse'>('welcome');
   let playBtn: HTMLButtonElement | undefined = $state();
   let browseBtn: HTMLButtonElement | undefined = $state();
+
+  let capturing = $state(false);
+
+  function startCapture() { capturing = true; }
+  function setPrefix(token: string) { capturing = false; onSetPrefix(token); }
+
+  function onChipKey(e: KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      startCapture();
+    }
+  }
 
   function gotoBrowse() { view = 'browse'; }
   function gotoWelcome() { view = 'welcome'; }
@@ -60,7 +77,10 @@
   });
 
   $effect(() => {
-    if (!visible) view = 'welcome';
+    if (!visible) {
+      view = 'welcome';
+      capturing = false;
+    }
   });
 
   $effect(() => {
@@ -147,6 +167,22 @@
           </svg>
           support
         </button>
+        <span class="menu-prefix">
+          <button
+            class="menu-link menu-prefix-btn"
+            data-testid="prefix-chip"
+            onclick={startCapture}
+            onkeydown={onChipKey}
+            aria-label="set tmux prefix key"
+          >
+            <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"
+                 fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1.5" y="4" width="13" height="8" rx="1.5"/>
+              <path d="M4 6.5h.01M6.5 6.5h.01M9 6.5h.01M11.5 6.5h.01M4.5 9.5h6"/>
+            </svg>
+            prefix {formatPrefix(settings.prefix)}
+          </button>
+        </span>
         <button class="menu-link" onclick={onToggleTheme} aria-label="cycle theme">
           {#if settings.theme === 'auto'}
             <svg class="menu-ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
@@ -204,6 +240,14 @@
         <MissionBrowser {progress} {onLaunchMission} />
       </div>
     </div>
+  {/if}
+
+  {#if capturing}
+    <PrefixCaptureOverlay
+      current={settings.prefix}
+      onSet={setPrefix}
+      onCancel={() => { capturing = false; }}
+    />
   {/if}
 </div>
 
@@ -292,6 +336,8 @@
   }
   .menu-link:hover, .menu-link:focus-visible { color: var(--ink-bright); }
   .menu-ico { display: block; }
+  .menu-prefix { display: inline-flex; align-items: baseline; gap: 4px; }
+  .menu-prefix-btn { white-space: nowrap; }
   .menu-btn {
     position: relative;
     display: flex;
