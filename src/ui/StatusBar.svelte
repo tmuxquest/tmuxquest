@@ -43,8 +43,7 @@
   }
 
   function formatPrefix(k: string): string {
-    if (k.startsWith('C-')) return `^${k.slice(2).toUpperCase()}`;
-    if (k.startsWith('M-')) return `M-${k.slice(2).toUpperCase()}`;
+    if (k === 'C- ') return 'C-Space';
     return k;
   }
 
